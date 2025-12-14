@@ -206,19 +206,44 @@ label.file input{position:absolute; inset:0; opacity:0; cursor:pointer}
 .bullets{margin:0; padding-left:18px; color:var(--muted)}
 .bullets li{margin:10px 0}
 
-.modal{
-  position:fixed; inset:0;
-  background: rgba(0,0,0,.55);
-  display:grid; place-items:center;
-  padding:18px;
+.modal {
+  position: fixed;
+  inset: 0;
+  z-index: 9999; /* 🔥 CLAVE */
+  background: rgba(3, 6, 15, 0.75);
+  backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
-.modal-card{
-  width:min(860px, 100%);
-  background: rgba(18,27,46,.92);
-  border:1px solid var(--line);
+
+.modal.hidden {
+  display: none;
+}
+
+.modal-card {
+  width: min(900px, 95%);
+  background: linear-gradient(
+    180deg,
+    rgba(20, 30, 55, 0.98),
+    rgba(15, 22, 40, 0.98)
+  );
   border-radius: 22px;
-  box-shadow: var(--shadow);
-  overflow:hidden;
+  box-shadow:
+    0 30px 90px rgba(0, 0, 0, 0.8),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.06);
+  animation: modalIn 0.25s ease-out;
+}
+
+@keyframes modalIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 .modal-head{
   display:flex; align-items:center; justify-content:space-between;
@@ -253,4 +278,10 @@ label.file input{position:absolute; inset:0; opacity:0; cursor:pointer}
   .layout{grid-template-columns: 1fr}
   .sidebar{position:sticky; top:73px; z-index:5}
   .grid.two{grid-template-columns: 1fr}
+}
+ .topbar,
+.sidebar,
+.main {
+  position: relative;
+  z-index: 1;
 }
