@@ -285,3 +285,124 @@ label.file input{position:absolute; inset:0; opacity:0; cursor:pointer}
   position: relative;
   z-index: 1;
 }
+body {
+  margin: 0;
+  font-family: system-ui, Arial;
+  background: #0b0f1a;
+  color: #e8f0ff;
+}
+
+.topbar {
+  padding: 14px 20px;
+  display: flex;
+  justify-content: space-between;
+  background: #0f1624;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: 250px 1fr;
+  height: calc(100vh - 70px);
+}
+
+.sidebar {
+  background: #0f1624;
+  padding: 14px;
+}
+
+.nav-item {
+  display: block;
+  width: 100%;
+  margin-bottom: 6px;
+  padding: 10px;
+  background: none;
+  border: none;
+  color: #fff;
+  text-align: left;
+  cursor: pointer;
+}
+
+.nav-item.active {
+  background: #7c5cff;
+  border-radius: 8px;
+}
+
+.main {
+  padding: 20px;
+  overflow-y: auto;
+}
+
+.view.hidden {
+  display: none;
+}
+
+.table {
+  width: 100%;
+  margin-top: 14px;
+  border-collapse: collapse;
+}
+
+.table th,
+.table td {
+  padding: 10px;
+  border-bottom: 1px solid #222;
+}
+
+.btn {
+  padding: 8px 12px;
+  background: #7c5cff;
+  border: none;
+  border-radius: 6px;
+  color: #000;
+  cursor: pointer;
+}
+
+.btn.danger {
+  background: #ff3b6b;
+  color: #fff;
+}
+
+.btn.ghost {
+  background: #1a2236;
+  color: #fff;
+}
+
+/* MODAL */
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.7);
+  backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.modal.hidden {
+  display: none;
+}
+
+.modal-card {
+  background: #121b2e;
+  border-radius: 18px;
+  width: 600px;
+  max-width: 95%;
+  padding: 16px;
+}
+
+.modal-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modal-body {
+  margin-top: 12px;
+}
+
+.modal-foot {
+  margin-top: 12px;
+  text-align: right;
+}
+
