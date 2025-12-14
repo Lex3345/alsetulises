@@ -1,0 +1,480 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ALSET Irrigation Systems — ERP</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+  <!-- Topbar -->
+  <header class="topbar">
+    <div class="brand">
+      <div class="logo">A</div>
+      <div class="brand-text">
+        <h1>ALSET Irrigation Systems</h1>
+        <p>ERP — Gestión integral</p>
+      </div>
+    </div>
+
+    <div class="top-actions">
+      <button class="btn ghost" id="btnExport">Exportar JSON</button>
+      <label class="btn ghost file">
+        Importar JSON
+        <input type="file" id="fileImport" accept=".json,application/json" />
+      </label>
+      <button class="btn" id="btnNewQuick">+ Nuevo</button>
+      <button class="btn danger" id="btnReset">Reset demo</button>
+    </div>
+  </header>
+
+  <div class="layout">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <nav class="nav">
+        <button class="nav-item active" data-view="dashboard">Dashboard</button>
+        <button class="nav-item" data-view="ventas">Gestión comercial</button>
+        <button class="nav-item" data-view="inventario">Inventario</button>
+        <button class="nav-item" data-view="clientes">Clientes</button>
+        <button class="nav-item" data-view="proveedores">Proveedores</button>
+        <button class="nav-item" data-view="facturacion">Facturación</button>
+        <button class="nav-item" data-view="nomina">Nómina</button>
+        <button class="nav-item" data-view="asistencias">Asistencias</button>
+        <button class="nav-item" data-view="reportes">Reportes</button>
+        <button class="nav-item" data-view="analiticas">Analíticas</button>
+        <div class="nav-sep"></div>
+        <button class="nav-item" data-view="config">Configuración</button>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="pill">
+          <span class="dot ok"></span>
+          <span>Datos guardados en tu navegador</span>
+        </div>
+        <div class="hint">Tip: usa “Exportar JSON” para respaldo.</div>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <main class="main">
+      <!-- Dashboard -->
+      <section class="view" id="view-dashboard">
+        <div class="page-head">
+          <div>
+            <h2>Dashboard</h2>
+            <p>Resumen del negocio y KPIs clave.</p>
+          </div>
+          <div class="filters">
+            <select id="dashRange" class="input">
+              <option value="30">Últimos 30 días</option>
+              <option value="90">Últimos 90 días</option>
+              <option value="365">Último año</option>
+              <option value="all">Todo</option>
+            </select>
+            <button class="btn ghost" id="btnSeed">Cargar datos demo</button>
+          </div>
+        </div>
+
+        <div class="grid kpis">
+          <div class="card">
+            <div class="kpi-title">Ventas (MXN)</div>
+            <div class="kpi-value" id="kpiVentas">$0</div>
+            <div class="kpi-sub" id="kpiVentasSub">—</div>
+          </div>
+          <div class="card">
+            <div class="kpi-title">Facturas emitidas</div>
+            <div class="kpi-value" id="kpiFacturas">0</div>
+            <div class="kpi-sub" id="kpiFacturasSub">—</div>
+          </div>
+          <div class="card">
+            <div class="kpi-title">Stock crítico</div>
+            <div class="kpi-value" id="kpiCritico">0</div>
+            <div class="kpi-sub">Productos bajo mínimo</div>
+          </div>
+          <div class="card">
+            <div class="kpi-title">Nómina mensual</div>
+            <div class="kpi-value" id="kpiNomina">$0</div>
+            <div class="kpi-sub">Estimación actual</div>
+          </div>
+        </div>
+
+        <div class="grid two">
+          <div class="card">
+            <div class="card-head">
+              <h3>Últimas ventas</h3>
+              <button class="btn small" data-jump="ventas">Ver módulo</button>
+            </div>
+            <div class="table-wrap">
+              <table class="table" id="tblUltVentas"></table>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-head">
+              <h3>Inventario crítico</h3>
+              <button class="btn small" data-jump="inventario">Gestionar</button>
+            </div>
+            <div class="table-wrap">
+              <table class="table" id="tblCritico"></table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Ventas -->
+      <section class="view hidden" id="view-ventas">
+        <div class="page-head">
+          <div>
+            <h2>Gestión comercial</h2>
+            <p>Registra cotizaciones/ventas, controla estados y márgenes.</p>
+          </div>
+          <div class="filters">
+            <input class="input" id="ventasSearch" placeholder="Buscar por folio, cliente, estado..." />
+            <button class="btn" id="btnVentaNueva">+ Nueva venta</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="table-wrap">
+            <table class="table" id="tblVentas"></table>
+          </div>
+        </div>
+      </section>
+
+      <!-- Inventario -->
+      <section class="view hidden" id="view-inventario">
+        <div class="page-head">
+          <div>
+            <h2>Inventario</h2>
+            <p>Productos, existencias, costos, stock mínimo y ajustes.</p>
+          </div>
+          <div class="filters">
+            <input class="input" id="invSearch" placeholder="Buscar por SKU, nombre, categoría..." />
+            <button class="btn" id="btnProductoNuevo">+ Nuevo producto</button>
+          </div>
+        </div>
+
+        <div class="grid two">
+          <div class="card">
+            <div class="card-head">
+              <h3>Productos</h3>
+              <div class="row">
+                <button class="btn ghost small" id="btnAjusteStock">Ajuste de stock</button>
+                <button class="btn ghost small" id="btnMovimientos">Movimientos</button>
+              </div>
+            </div>
+            <div class="table-wrap">
+              <table class="table" id="tblInventario"></table>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-head">
+              <h3>Resumen</h3>
+            </div>
+            <div class="pad">
+              <div class="stat">
+                <span>Valor inventario (costo)</span>
+                <strong id="invValor">$0</strong>
+              </div>
+              <div class="stat">
+                <span>Productos totales</span>
+                <strong id="invTotal">0</strong>
+              </div>
+              <div class="stat">
+                <span>Críticos</span>
+                <strong id="invCriticos">0</strong>
+              </div>
+              <div class="stat">
+                <span>Movimientos</span>
+                <strong id="invMovs">0</strong>
+              </div>
+              <div class="note">
+                El valor se calcula con <b>costo unitario × stock</b>.
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Clientes -->
+      <section class="view hidden" id="view-clientes">
+        <div class="page-head">
+          <div>
+            <h2>Clientes</h2>
+            <p>Catálogo, contacto, historial de compras y saldo.</p>
+          </div>
+          <div class="filters">
+            <input class="input" id="cliSearch" placeholder="Buscar cliente..." />
+            <button class="btn" id="btnClienteNuevo">+ Nuevo cliente</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="table-wrap">
+            <table class="table" id="tblClientes"></table>
+          </div>
+        </div>
+      </section>
+
+      <!-- Proveedores -->
+      <section class="view hidden" id="view-proveedores">
+        <div class="page-head">
+          <div>
+            <h2>Proveedores</h2>
+            <p>Catálogo, contacto, compras y condiciones.</p>
+          </div>
+          <div class="filters">
+            <input class="input" id="provSearch" placeholder="Buscar proveedor..." />
+            <button class="btn" id="btnProveedorNuevo">+ Nuevo proveedor</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="table-wrap">
+            <table class="table" id="tblProveedores"></table>
+          </div>
+        </div>
+      </section>
+
+      <!-- Facturación -->
+      <section class="view hidden" id="view-facturacion">
+        <div class="page-head">
+          <div>
+            <h2>Facturación</h2>
+            <p>Emite facturas desde ventas, controla pagos y estatus.</p>
+          </div>
+          <div class="filters">
+            <input class="input" id="facSearch" placeholder="Buscar por folio, cliente, estatus..." />
+            <button class="btn" id="btnFacturaNueva">+ Nueva factura</button>
+          </div>
+        </div>
+
+        <div class="grid two">
+          <div class="card">
+            <div class="card-head">
+              <h3>Facturas</h3>
+            </div>
+            <div class="table-wrap">
+              <table class="table" id="tblFacturas"></table>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-head">
+              <h3>Pendientes de cobro</h3>
+              <button class="btn small ghost" id="btnCobroRapido">Cobro rápido</button>
+            </div>
+            <div class="table-wrap">
+              <table class="table" id="tblPendientes"></table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Nómina -->
+      <section class="view hidden" id="view-nomina">
+        <div class="page-head">
+          <div>
+            <h2>Nómina</h2>
+            <p>Empleados, salarios, percepciones y deducciones.</p>
+          </div>
+          <div class="filters">
+            <input class="input" id="nomSearch" placeholder="Buscar empleado..." />
+            <button class="btn" id="btnEmpleadoNuevo">+ Nuevo empleado</button>
+          </div>
+        </div>
+
+        <div class="grid two">
+          <div class="card">
+            <div class="card-head">
+              <h3>Empleados</h3>
+              <button class="btn small" id="btnCalcularNomina">Calcular nómina</button>
+            </div>
+            <div class="table-wrap">
+              <table class="table" id="tblEmpleados"></table>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-head">
+              <h3>Recibos (historial)</h3>
+            </div>
+            <div class="table-wrap">
+              <table class="table" id="tblRecibos"></table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Asistencias -->
+      <section class="view hidden" id="view-asistencias">
+        <div class="page-head">
+          <div>
+            <h2>Asistencias</h2>
+            <p>Entradas/salidas, retardos y resumen por empleado.</p>
+          </div>
+          <div class="filters">
+            <input type="date" class="input" id="asisFecha" />
+            <select class="input" id="asisEmpleado"></select>
+            <button class="btn" id="btnCheckIn">Check-in</button>
+            <button class="btn ghost" id="btnCheckOut">Check-out</button>
+          </div>
+        </div>
+
+        <div class="grid two">
+          <div class="card">
+            <div class="card-head">
+              <h3>Registros</h3>
+            </div>
+            <div class="table-wrap">
+              <table class="table" id="tblAsistencias"></table>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-head">
+              <h3>Resumen</h3>
+            </div>
+            <div class="pad" id="asisResumen"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Reportes -->
+      <section class="view hidden" id="view-reportes">
+        <div class="page-head">
+          <div>
+            <h2>Reportes</h2>
+            <p>Genera reportes por fecha y exporta resultados.</p>
+          </div>
+          <div class="filters">
+            <input type="date" class="input" id="repFrom" />
+            <input type="date" class="input" id="repTo" />
+            <select class="input" id="repTipo">
+              <option value="ventas">Ventas</option>
+              <option value="facturas">Facturas</option>
+              <option value="inventario">Inventario</option>
+              <option value="nomina">Nómina</option>
+              <option value="asistencias">Asistencias</option>
+            </select>
+            <button class="btn" id="btnGenerarReporte">Generar</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-head">
+            <h3>Resultado</h3>
+            <div class="row">
+              <button class="btn ghost small" id="btnCopiarReporte">Copiar</button>
+              <button class="btn ghost small" id="btnDescargarCSV">Descargar CSV</button>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table class="table" id="tblReporte"></table>
+          </div>
+        </div>
+      </section>
+
+      <!-- Analíticas -->
+      <section class="view hidden" id="view-analiticas">
+        <div class="page-head">
+          <div>
+            <h2>Analíticas</h2>
+            <p>Tendencias, top clientes/productos y margen.</p>
+          </div>
+          <div class="filters">
+            <select id="anaRange" class="input">
+              <option value="30">30 días</option>
+              <option value="90">90 días</option>
+              <option value="365">365 días</option>
+              <option value="all">Todo</option>
+            </select>
+            <button class="btn" id="btnRecalcularAna">Recalcular</button>
+          </div>
+        </div>
+
+        <div class="grid two">
+          <div class="card">
+            <div class="card-head"><h3>Top clientes (ventas)</h3></div>
+            <div class="table-wrap"><table class="table" id="tblTopClientes"></table></div>
+          </div>
+          <div class="card">
+            <div class="card-head"><h3>Top productos (unidades)</h3></div>
+            <div class="table-wrap"><table class="table" id="tblTopProductos"></table></div>
+          </div>
+        </div>
+
+        <div class="grid two">
+          <div class="card">
+            <div class="card-head"><h3>Margen estimado</h3></div>
+            <div class="pad" id="margenBox"></div>
+          </div>
+          <div class="card">
+            <div class="card-head"><h3>Salud del negocio</h3></div>
+            <div class="pad" id="saludBox"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Config -->
+      <section class="view hidden" id="view-config">
+        <div class="page-head">
+          <div>
+            <h2>Configuración</h2>
+            <p>Impuestos, moneda y preferencias.</p>
+          </div>
+          <div class="filters"></div>
+        </div>
+
+        <div class="grid two">
+          <div class="card">
+            <div class="card-head"><h3>Empresa</h3></div>
+            <div class="pad form">
+              <label>Nombre</label>
+              <input class="input" id="cfgNombre" />
+              <label>Moneda</label>
+              <select class="input" id="cfgMoneda">
+                <option value="MXN">MXN</option>
+                <option value="USD">USD</option>
+              </select>
+              <label>IVA (%)</label>
+              <input class="input" id="cfgIVA" type="number" min="0" max="100" step="0.1" />
+              <button class="btn" id="btnGuardarCfg">Guardar</button>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-head"><h3>Atajos</h3></div>
+            <div class="pad">
+              <ul class="bullets">
+                <li><b>+ Nuevo</b>: crea rápido cliente/proveedor/producto/venta</li>
+                <li><b>Exportar JSON</b>: respaldo y migración</li>
+                <li><b>Reportes</b>: exporta CSV</li>
+              </ul>
+              <div class="note">
+                Si quieres backend real (usuarios, roles, multi-sucursal), te lo armo en una siguiente fase con Node/Express + PostgreSQL.
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Modal -->
+  <div class="modal hidden" id="modal">
+    <div class="modal-card">
+      <div class="modal-head">
+        <h3 id="modalTitle">Modal</h3>
+        <button class="icon-btn" id="modalClose" aria-label="Cerrar">✕</button>
+      </div>
+      <div class="modal-body" id="modalBody"></div>
+      <div class="modal-foot" id="modalFoot"></div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
