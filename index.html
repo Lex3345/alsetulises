@@ -456,7 +456,7 @@
               <div class="note">
                 Si quieres backend real (usuarios, roles, multi-sucursal), te lo armo en una siguiente fase con Node/Express + PostgreSQL.
               </div>
-            </div>
+          </div>
           </div>
         </div>
       </section>
@@ -476,5 +476,109 @@
   </div>
 
   <script src="app.js"></script>
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <title>ALSET Irrigation Systems — ERP</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<header class="topbar">
+  <div class="brand">
+    <div class="logo">A</div>
+    <div>
+      <h1>ALSET Irrigation Systems</h1>
+      <p>ERP — Gestión integral</p>
+    </div>
+  </div>
+
+  <div class="top-actions">
+    <button class="btn ghost" id="btnExport">Exportar JSON</button>
+    <button class="btn ghost" id="btnImport">Importar JSON</button>
+    <button class="btn" id="btnNewQuick">+ Nuevo</button>
+    <button class="btn danger" id="btnReset">Reset demo</button>
+  </div>
+</header>
+
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <nav class="nav">
+      <button class="nav-item active" data-view="dashboard">Dashboard</button>
+      <button class="nav-item" data-view="ventas">Gestión comercial</button>
+      <button class="nav-item" data-view="cotizaciones">Cotizaciones</button>
+      <button class="nav-item" data-view="inventario">Inventario</button>
+      <button class="nav-item" data-view="clientes">Clientes</button>
+      <button class="nav-item" data-view="proveedores">Proveedores</button>
+      <button class="nav-item" data-view="facturacion">Facturación</button>
+      <button class="nav-item" data-view="nomina">Nómina</button>
+      <button class="nav-item" data-view="asistencias">Asistencias</button>
+      <button class="nav-item" data-view="reportes">Reportes</button>
+      <button class="nav-item" data-view="analiticas">Analíticas</button>
+      <button class="nav-item" data-view="config">Configuración</button>
+    </nav>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+
+    <!-- DASHBOARD -->
+    <section class="view" id="view-dashboard">
+      <h2>Dashboard</h2>
+      <p>Resumen general del negocio.</p>
+    </section>
+
+    <!-- VENTAS -->
+    <section class="view hidden" id="view-ventas">
+      <h2>Ventas</h2>
+      <button class="btn" onclick="openVentaForm()">+ Nueva venta</button>
+      <table class="table" id="tblVentas"></table>
+    </section>
+
+    <!-- COTIZACIONES -->
+    <section class="view hidden" id="view-cotizaciones">
+      <h2>Cotizaciones</h2>
+      <p>No afectan inventario ni facturación</p>
+      <button class="btn" id="btnCotNueva">+ Nueva cotización</button>
+      <table class="table" id="tblCotizaciones"></table>
+    </section>
+
+    <!-- INVENTARIO -->
+    <section class="view hidden" id="view-inventario">
+      <h2>Inventario</h2>
+      <button class="btn" onclick="openProductoForm()">+ Producto</button>
+      <table class="table" id="tblInventario"></table>
+    </section>
+
+    <!-- CLIENTES -->
+    <section class="view hidden" id="view-clientes">
+      <h2>Clientes</h2>
+      <button class="btn" onclick="openClienteForm()">+ Cliente</button>
+      <table class="table" id="tblClientes"></table>
+    </section>
+
+  </main>
+</div>
+
+<!-- MODAL -->
+<div class="modal hidden" id="modal">
+  <div class="modal-card">
+    <div class="modal-head">
+      <h3 id="modalTitle">Modal</h3>
+      <button class="icon-btn" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body" id="modalBody"></div>
+    <div class="modal-foot" id="modalFoot"></div>
+  </div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
+
 </body>
 </html>
